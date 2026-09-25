@@ -7,11 +7,7 @@ import {IERC223Receiver} from "./IERC223Receiver.sol";
 contract RejectingERC223Receiver is IERC223Receiver {
     error TransferRejected();
 
-    function tokenReceived(
-        address,
-        uint256,
-        bytes calldata
-    ) external pure returns (bytes4) {
+    function tokenReceived(address, uint256, bytes calldata) external pure returns (bytes4) {
         revert TransferRejected();
     }
 }

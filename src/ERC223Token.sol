@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import {IERC223Receiver} from "./IERC223Receiver.sol";
 
-
 contract ERC223Token {
     error InsufficientBalance(address sender, uint256 balance, uint256 required);
 
@@ -14,27 +13,15 @@ contract ERC223Token {
 
     mapping(address => uint256) private _balances;
 
-    
-    event Transfer(
-        address indexed _from,
-        address indexed _to,
-        uint256 _value,
-        bytes _data
-    );
+    event Transfer(address indexed _from, address indexed _to, uint256 _value, bytes _data);
 
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        uint8 decimals_,
-        uint256 initialSupply_
-    ) {
+    constructor(string memory name_, string memory symbol_, uint8 decimals_, uint256 initialSupply_) {
         _name = name_;
         _symbol = symbol_;
         _decimals = decimals_;
         _totalSupply = initialSupply_;
         _balances[msg.sender] = initialSupply_;
 
-        
         emit Transfer(address(0), msg.sender, initialSupply_, "");
     }
 
@@ -58,26 +45,15 @@ contract ERC223Token {
         return _balances[_owner];
     }
 
-   
     function transfer(address _to, uint256 _value) external returns (bool) {
         return _transfer(msg.sender, _to, _value, "");
     }
 
-    
-    function transfer(
-        address _to,
-        uint256 _value,
-        bytes calldata _data
-    ) external returns (bool) {
+    function transfer(address _to, uint256 _value, bytes calldata _data) external returns (bool) {
         return _transfer(msg.sender, _to, _value, _data);
     }
 
-    function _transfer(
-        address _from,
-        address _to,
-        uint256 _value,
-        bytes memory _data
-    ) internal returns (bool) {
+    function _transfer(address _from, address _to, uint256 _value, bytes memory _data) internal returns (bool) {
         uint256 senderBalance = _balances[_from];
         if (senderBalance < _value) {
             revert InsufficientBalance(_from, senderBalance, _value);
@@ -86,9 +62,9 @@ contract ERC223Token {
         // ERC-223 requires the receiver callback to happen only after the
         // token's own state transition. If the callback reverts, EVM atomicity
         // rolls these balance writes back as well.
-        unchecked {
-            _balances[_from] = senderBalance - _value;
-        }
+
+        _balances[_from] -= _value;
+
         _balances[_to] += _value;
 
         // EIP-223 distinguishes EOAs from contracts by code size. A contract

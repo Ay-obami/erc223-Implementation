@@ -10,12 +10,7 @@ import {RejectingERC223Receiver} from "../src/RejectingERC223Receiver.sol";
 import {IERC223Receiver} from "../src/IERC223Receiver.sol";
 
 contract ERC223TokenTest is Test {
-    event Transfer(
-        address indexed _from,
-        address indexed _to,
-        uint256 _value,
-        bytes _data
-    );
+    event Transfer(address indexed _from, address indexed _to, uint256 _value, bytes _data);
 
     ERC223Token internal token;
     ExampleERC223Receiver internal receiver;
@@ -122,12 +117,7 @@ contract ERC223TokenTest is Test {
 
         vm.prank(alice);
         vm.expectRevert(
-            abi.encodeWithSelector(
-                ERC223Token.InsufficientBalance.selector,
-                alice,
-                aliceBalance,
-                aliceBalance + 1
-            )
+            abi.encodeWithSelector(ERC223Token.InsufficientBalance.selector, alice, aliceBalance, aliceBalance + 1)
         );
         token.transfer(bob, aliceBalance + 1);
 
@@ -137,20 +127,12 @@ contract ERC223TokenTest is Test {
 
     function testReceiverRejectsDirectFakeHookCall() public {
         vm.prank(alice);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                ExampleERC223Receiver.UnsupportedToken.selector,
-                alice
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(ExampleERC223Receiver.UnsupportedToken.selector, alice));
         receiver.tokenReceived(alice, 1 ether, "");
     }
 
     function testReceiverReturnsPublishedMagicValue() public pure {
-        assertEq(
-            bytes32(IERC223Receiver.tokenReceived.selector),
-            bytes32(bytes4(0x8943ec02))
-        );
+        assertEq(bytes32(IERC223Receiver.tokenReceived.selector), bytes32(bytes4(0x8943ec02)));
     }
 
     function testFuzzTransferToEOA(uint96 amount) public {

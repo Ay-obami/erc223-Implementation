@@ -23,11 +23,7 @@ contract ExampleERC223Receiver is IERC223Receiver {
         acceptedToken = acceptedToken_;
     }
 
-    function tokenReceived(
-        address _from,
-        uint256 _value,
-        bytes calldata _data
-    ) external returns (bytes4) {
+    function tokenReceived(address _from, uint256 _value, bytes calldata _data) external returns (bytes4) {
         // ERC-223 says msg.sender is the token contract. Filtering it prevents
         // arbitrary contracts or EOAs from fabricating a deposit record.
         if (msg.sender != acceptedToken) {
@@ -36,9 +32,7 @@ contract ExampleERC223Receiver is IERC223Receiver {
 
         // This value demonstrates that the token balance was updated before
         // the hook was invoked, as required by the EIP.
-        observedBalanceDuringHook = IERC223BalanceView(msg.sender).balanceOf(
-            address(this)
-        );
+        observedBalanceDuringHook = IERC223BalanceView(msg.sender).balanceOf(address(this));
 
         deposits[_from] += _value;
         lastFrom = _from;
