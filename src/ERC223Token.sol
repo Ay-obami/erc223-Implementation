@@ -54,6 +54,9 @@ contract ERC223Token {
     }
 
     function _transfer(address _from, address _to, uint256 _value, bytes memory _data) internal returns (bool) {
+        if (_to == address(0)) {
+            revert("ERC223: transfer to the zero address");
+        }
         uint256 senderBalance = _balances[_from];
         if (senderBalance < _value) {
             revert InsufficientBalance(_from, senderBalance, _value);
@@ -64,7 +67,7 @@ contract ERC223Token {
         // rolls these balance writes back as well.
 
         _balances[_from] -= _value;
-
+        
         _balances[_to] += _value;
 
         // EIP-223 distinguishes EOAs from contracts by code size. A contract
