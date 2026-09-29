@@ -15,7 +15,8 @@ Foundry implementation of the scoped ERC-223 assignment.
 ## Run
 
 ```bash
-forge install foundry-rs/forge-std --no-commit
+git clone --recurse-submodules https://github.com/Ay-obami/erc223-Implementation.git
+cd erc223-Implementation
 forge test -vvv
 ```
 
