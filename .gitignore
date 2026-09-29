@@ -1,0 +1,6 @@
+# Generated Foundry build and test state
+out/
+cache/
+
+# Local Foundry broadcast artifacts
+broadcast/
